@@ -5,3 +5,6 @@
 *~
 .idea/
 .vscode/
+
+# Large source PDF (exceeds GitHub's 100MB limit — kept locally only)
+docs/sources/trivium-the-classical-liberal-arts-of-grammar-logic-amp-rhetoric-illustrated-1632864967-9781632864963_compress.pdf
