@@ -4,44 +4,43 @@ This document describes how Limpide is built. It assumes the reader has read `PE
 
 ## The stack at a glance
 
+Limpide is a **plugin** on the AYA host (ADR-0019; AYA ADR-0017). It adds no process of its own: an AYA deployment is three processes, and Limpide contributes code, schema, and playbooks to each of them.
+
 ```
 ┌──────────────────────────────────────────────────────────────────────┐
-│  Frontend (React + Vite)                                              │
+│  AYA host frontend (React 19 + Vite, Logto sign-in)                   │
+│  + Limpide plugin widgets and `limpide.*` renderables:                │
 │  - Conversation UI                                                    │
 │  - Inline visualizations (diagrams, graphs, marked-up text)           │
 │  - Optional pinned-gap awareness sidebar                              │
 └──────────────────────────────────────────────────────────────────────┘
-                            │  WebSocket
-                            ▼
+        │  Surreal live queries (browser → SurrealDB,      │  HTTP
+        │  host-minted token, row-level permissions)       │  BFF routes
+        ▼                                                  ▼
 ┌──────────────────────────────────────────────────────────────────────┐
-│  Cloudflare Workers (edge)                                            │
-│  - WebSocket fan-out (Durable Objects)                                │
-│  - Webhook receivers (auth callbacks, future inbound channels)        │
-│  - Scheduled triggers (Gardner background work, decay calculations)   │
-│  - Auth + rate limiting                                               │
+│  AYA worker (Node process) — Flue is the execution engine             │
+│  - Surreal lease queues, Dispatch adapter (refs-only), BFF routes     │
+│  - Policy Gate registry (+ Limpide's F1–F12 evaluators)               │
+│  - Event Journal appenders, Renderable builders                       │
+│  - Scheduled-playbook clock (AYA ADR-0018)                            │
+│  + Limpide plugin:                                                    │
+│    - Tutor: Flue agent, Opus-class, interactive, holds the floor      │
+│    - Gardner: Flue agent, Haiku-class, analytic loop, debounced       │
+│    - Disclosure classifier: Flue workflow with a structured result    │
+│    - Limpide tools, workflows, BFF routes, scheduled playbooks        │
 └──────────────────────────────────────────────────────────────────────┘
-                            │  WebSocket / HTTP
+                            │  SurrealQL
                             ▼
 ┌──────────────────────────────────────────────────────────────────────┐
-│  Agent worker (Node process)                                          │
-│  - agent-core runtime                                                 │
-│  - Tutor agent (Claude Opus, interactive lane)                        │
-│  - Gardner agent (Claude Haiku, analytic lane, debounced)             │
-│  - Session orchestration, dispatch, Policy Gate                       │
-└──────────────────────────────────────────────────────────────────────┘
-                            │  SurrealQL / WebSocket live queries
-                            ▼
-┌──────────────────────────────────────────────────────────────────────┐
-│  SurrealDB                                                            │
-│  - Curriculum graph (concepts, prereqs, cross-substrate links)        │
-│  - Student subgraph (per-student projections)                         │
-│  - Session events (append-only)                                       │
-│  - Pinned-gap agenda                                                  │
-│  - Foundation rules (read by Policy Gate)                             │
+│  SurrealDB (one instance; host tables + Limpide plugin-private tables)│
+│  - Host: Task, Event Journal, Playbook, Foundation, Memory, identity  │
+│  - Limpide: curriculum graph (concepts, prereqs, cross-substrate      │
+│    links), programs/overlays, student subgraph, gap records, pinned   │
+│    gaps, curiosity signals, probes, consent records                   │
 └──────────────────────────────────────────────────────────────────────┘
 ```
 
-The frontend talks to Workers, Workers talk to the agent process and to SurrealDB live queries, the agent process talks to SurrealDB directly and to LLM providers. The split is deliberate: Workers handle short-lived edge concerns, the agent process handles long-running reasoning, and SurrealDB is the single source of truth.
+The browser reads reactive state straight from SurrealDB live queries under Surreal's permission model and calls the worker's BFF routes for everything else. The worker leases work from Surreal, admits it to Flue through the refs-only Dispatch adapter, runs the agents, and lands output back into Surreal as messages, renderables, and journal events. SurrealDB is the single source of truth. There is no edge tier (ADR-0020).
 
 ## Why this stack
 
@@ -53,15 +52,15 @@ The honest caveat: SurrealDB 3.0 went GA in February 2026. It's stable enough to
 
 See `docs/ADR/0001-database-surrealdb.md` for the full decision.
 
-**Why Cloudflare Workers for the edge.** Workers do three things well that we need: WebSocket fan-out via Durable Objects (frontend reactive state without a separate Convex-style backend), webhook receivers (fast cold starts, signature verification, forward to SurrealDB), and scheduled triggers via Cron Triggers (Gardner background work, confidence decay calculations, end-of-day rollups).
+**Why no edge tier.** AYA exited Convex without one: the browser subscribes to SurrealDB live queries directly, authenticated by a short-lived Surreal token the worker mints from the Logto identity, with row-level permissions in Surreal; the worker hosts the BFF routes and webhook receivers; scheduled work is a playbook with a `schedule` projection ticked by the host clock (AYA ADR-0018). Limpide running a private Workers layer in front of a host that has none would duplicate auth and split the scheduler. The original Workers design is kept as history in ADR-0002.
 
-Workers do *not* do agent loops well. The CPU time limit per request is too short for a multi-LLM-call session. The agent process stays as a Node service.
+See `docs/ADR/0020-edge-layer-follows-aya.md`.
 
-See `docs/ADR/0002-edge-cloudflare-workers.md`.
+**Why Flue inside the AYA envelope.** AYA retired its bespoke agent framework and converged on Flue as the execution engine (AYA ADR-0014): Flue owns the agentic loop, tools, skills, subagents, sandboxes, model providers, streaming, and workflow orchestration; AYA owns the eight primitives on Surreal, the Policy Gate, the Event Journal, tenancy and IAM, and Renderables. The seam is the refs-only Dispatch adapter. For Limpide this is the right split: the pedagogy is enforced by the envelope (the gate makes F-rules deterministic; the journal is what `MEASUREMENT.md`'s process signals are computed from), while the engine is a commodity we should not be maintaining. Flue on its own is single-tenant and ungoverned by design, which is why "Limpide directly on Flue" is a fine prototype and not the product.
 
-**Why agent-core.** The framework is already built and matches Limpide's needs structurally — Foundation/Playbook/Task/Event primitives map cleanly onto the pedagogy (see *the AYA primitive mapping* below). The alternative would be building from scratch, which is wasteful when an existing framework fits this well, or adopting LangChain / LlamaIndex / similar, which are general-purpose and would require more adaptation than agent-core needs.
+See `docs/ADR/0019-flue-execution-engine-and-plugin-packaging.md`.
 
-See `docs/ADR/0003-framework-agent-core.md`.
+**Why a plugin, not a Skill.** In AYA's current vocabulary a *Skill* is a Flue skill — a versioned procedure an agent follows (our session-loop Playbook is one). A *plugin* is how an AYA instance becomes a product (AYA ADR-0017): a resolvable package exporting an `AppBundle` plus contribution hooks. Limpide is the latter, alongside Email EA (the public example) and Aegilo (the first commercial plugin). The host boots with zero plugins; listing `@aegilo/plugin-limpide` in its config is what makes an instance a tutoring product.
 
 **Why two agents on a shared session.** The Tutor and Gardner have fundamentally different jobs (conversational vs. analytic), benefit from different models (strong reasoning vs. structured extraction), need different latency characteristics (interactive vs. debounced), and must not interfere with each other's outputs. A single agent wearing two hats does both jobs worse and conflates concerns that should stay separated.
 
@@ -69,147 +68,80 @@ See `docs/ADR/0004-two-agent-shape.md`.
 
 ## The AYA primitive mapping
 
-Limpide is a Skill on the AYA platform. The primitives map as follows:
+Limpide is a plugin on the AYA host. The eight host primitives map onto the pedagogy as follows — this table survived the substrate change from agent-core to Flue untouched, which is the reason ADR-0019 was a swap and not a redesign:
 
 | AYA primitive | Limpide use |
 |---|---|
-| **Foundation** | The pedagogical rules F1–F10 from `PEDAGOGY.md`. Encoded as machine-readable Policy Gate rules. Every Tutor and Gardner action is gate-checked against these. |
-| **Playbook** | The six-state session loop, versioned. When the loop changes, encounters log which Playbook version they ran under. |
-| **Task** | A tutoring session. Lifecycle: declared (student or scheduler initiates) → delegated (Tutor agent picks up) → in_progress (loop running) → review (end-of-session synthesis) → concluded. |
-| **Event** | Session transcripts plus state transitions. Append-only. Gardner reads events; the student subgraph is a projection over events. |
-| **Memory** | Curriculum graph, student subgraph, gap records, curiosity signals. SurrealDB-backed. |
-| **Dispatch** | The lane-based scheduler. Tutor on the interactive lane, Gardner on the analytic lane (debounced), background work on the background lane. |
-| **Policy Gate** | Foundation rules as deterministic gates. ALLOW / DENY / REQUIRE_REVIEW on tool calls, outbound events, and state transitions. |
+| **Foundation** | The pedagogical rules F1–F12 from `PEDAGOGY.md`. Encoded as machine-readable Policy Gate rules. Every Tutor and Gardner action is gate-checked against these. A plugin may propose Foundation amendments; it never writes Foundation. |
+| **Playbook** | The six-state session loop, versioned, seeded by the plugin and attached to the Tutor as a Flue skill. When the loop changes, encounters log which Playbook version they ran under. Scheduled maintenance (decay, cooldowns, audits, rollups) is also playbooks — ones with a `schedule` projection. |
+| **Task** | A tutoring session. Lifecycle: declared (student or scheduler initiates) → delegated (leased by the worker, admitted to Flue) → in_progress (loop running) → review (end-of-session synthesis) → concluded. The Task id is the join key between Tutor and Gardner. |
+| **Event** | Session transcripts plus state transitions, probes, gaps, evaluations. Append-only Event Journal. Gardner reads events; the student subgraph is a projection over events; `MEASUREMENT.md`'s process signals are computed from them. |
+| **Memory** | Curriculum graph, student subgraph, gap records, curiosity signals — Limpide's plugin-private Surreal tables, reached by the agents as tools (the model pulls what it needs; nothing is pre-stuffed). |
+| **Dispatch** | The lease queue and the refs-only adapter that admits a Task to Flue. Tutor on the interactive lane, Gardner on the analytic lane (debounced), scheduled playbooks on the host clock. |
+| **Policy Gate** | Foundation rules as deterministic gates. ALLOW / DENY / REQUIRE_REVIEW on tool calls, outbound events, state transitions, and probes. Limpide registers its evaluators with the host's registry. |
 | **Ontology** | Substrate types, channel types, gap types, outcome types. Canonical vocabulary across all primitives. |
 
-This mapping is the structural reason Limpide on AYA fits better than Limpide on a generic agent framework. The framework already encodes the separation between *why* (Foundation), *how* (Playbook), and *what happened* (Event) that Limpide's pedagogy depends on.
+This mapping is the structural reason Limpide on AYA fits better than Limpide on a generic agent framework. The host already encodes the separation between *why* (Foundation), *how* (Playbook), and *what happened* (Event) that Limpide's pedagogy depends on — and Flue, which has none of these, is exactly the part we want to be generic.
 
-## Required extensions to agent-core
+## The execution shape: two Flue sessions on one Task
 
-agent-core today is single-agent: an `Agent` owns its session. Limpide needs a session that can be joined by multiple agents with separate identities, separate tool sets, separate LLM clients, but a shared event stream and shared memory. This is a real extension and it benefits Limpide and any future ensemble Skill (research-assistant pairs, debate-pair tutors, etc.).
+Flue's unit of execution is a session that runs one operation at a time. Limpide needs two agents running concurrently against one tutoring Task, with one of them structurally unable to speak to the student. The shape (ADR-0004 as amended, ADR-0019 §2):
 
-### Session as a first-class object
+**The Task plus its Event Journal is the shared session.** There is no framework-level `Session` object; the AYA Task is the join key, and the journal is the only channel between the agents. Every student turn, Tutor turn, state transition, probe, gap, and evaluation is a journal event on the Task with a `visibility` field.
 
-```typescript
-export interface SessionContext {
-  sessionId: string;
-  traceId: string;
-  userId: string;
-  orgId: string;
-  state: Record<string, unknown>;  // Skill-specific state
-}
+**Admission.** A student message is a Task lease. The worker's Dispatch adapter admits it to Flue as refs only — `{ entityId, accountId, taskId, principal, correlationId, … }` — and reconstructs tenant-scoped repositories, the Policy Gate, and the journal sinks from those refs inside the workflow. No live objects cross the boundary. This is the same adapter AYA's chat path uses; Limpide contributes its own workflow behind it.
 
-export interface Session {
-  readonly id: string;
-  readonly context: SessionContext;
-  readonly memory: Memory;
-  readonly policy: Policy;
-  readonly events: EventStream;
-  readonly dispatch: Dispatcher;
+**Tutor** is a Flue agent (`createAgent`) with a persistent session per tutoring Task: Opus-class model, the Limpide tool set (curriculum reads, probe emission, gap and encounter writes, memory queries, fork/return controls), and the session-loop Playbook attached as a Flue skill. It holds the conversational *floor* by construction: only the Tutor session's output is landed as a `public` message. It never delegates to Gardner as a subagent.
 
-  attach(agent: AttachedAgent): AgentHandle;
-  detach(handle: AgentHandle): Promise<void>;
+**Gardner** is a Flue agent run by the worker as a named loop on the analytic lane, triggered on a debounce (event-count threshold, latency threshold, or an explicit `flush` from the Playbook before a transition that needs the analysis). Haiku-class model, strict `result` schema. It reads the rolling window of the journal and writes gap records, curiosity signals, teach-back evaluations, and probe attributions through the Limpide repositories; its journal events are `visibility: 'internal'`. It is *not* a Flue subagent of the Tutor: a subagent returns its result into the parent's transcript, which is precisely the leak F3 forbids, and it would tie Gardner's cadence to the Tutor's turn.
 
-  suspend(): Promise<SessionSnapshot>;
-  resume(snapshot: SessionSnapshot): Promise<void>;
-  conclude(reason: string): Promise<void>;
+**Lanes.** Three, as before — *interactive* (runs immediately, holds the floor, sub-2-second target per ADR-0017), *analytic* (debounced, never holds the floor, budget "before the next transition that needs it"), *background* (scheduled playbooks on the host clock: curriculum maintenance, decay, agenda audits, rollups). The lanes are queue and scheduling policy in the worker, not framework types.
 
-  // The conversational floor — exactly one agent holds it at a time.
-  // Background agents (Gardner) never request the floor.
-  requestFloor(handle: AgentHandle): Promise<FloorGrant>;
-  releaseFloor(handle: AgentHandle): Promise<void>;
-}
-```
+**Waiting for Gardner without polling.** When the Tutor finishes Teach-back and the Playbook is ready to evaluate, it waits until the Gardner loop has drained the journal for this Task up to the current sequence number (the former `awaitLane('analytic')`), then reads the latest gap records and proposes the transition. The transition gate (below) has the last word.
 
-The floor concept prevents two agents from speaking to the user simultaneously. Tutor holds the floor by default; Gardner never requests it. Future Skills with multiple speaking agents (debate, role-play) can use the same mechanism with explicit handoffs.
+**Visibility is enforced where events are landed**, not in prompts. The worker lands `public` events as messages and renderables; `internal` and `agent-only` events never leave the journal. This is the structural enforcement of Foundation rule F3.
 
-### Attached agents
-
-```typescript
-export interface AttachedAgent {
-  readonly role: string;              // 'tutor', 'gardner'
-  readonly systemPrompt: string;
-  readonly tools: Tool[];
-  readonly llm: LLMClient;
-  readonly lane: DispatchLane;        // 'interactive' | 'analytic' | 'background'
-  readonly subscriptions: EventSubscription[];
-
-  onEvent(event: SessionEvent, ctx: AgentRunContext): Promise<AgentTurn>;
-}
-
-export interface AgentHandle {
-  readonly agentId: string;
-  readonly role: string;
-  readonly attachedAt: Date;
-}
-
-export type DispatchLane = 'interactive' | 'analytic' | 'background';
-```
-
-Three lanes:
-
-- **Interactive.** Runs immediately. Holds the floor. Latency budget tight (sub-2-second target for human conversation).
-- **Analytic.** Runs on debounce. Never holds the floor. Latency budget: "before the next state transition that needs the analysis."
-- **Background.** Fire-and-forget. Periodic curriculum maintenance, telemetry rollups, decay calculations. No consumer waiting.
-
-### The event stream
+The plugin-side contract these pieces implement — the journal event shape, the visibility enum, the drain primitive — is small and Limpide-owned:
 
 ```typescript
 export interface SessionEvent {
   readonly id: string;
-  readonly sessionId: string;
+  readonly taskId: string;            // the AYA Task = the tutoring session
   readonly at: Date;
-  readonly seq: number;               // monotonic per session
+  readonly seq: number;               // monotonic per Task
   readonly type: string;
-  readonly agentRole?: string;        // who emitted; undefined = system
+  readonly agentRole?: 'tutor' | 'gardner' | 'classifier';   // undefined = system
   readonly visibility: EventVisibility;
   readonly payload: unknown;
 }
 
 export type EventVisibility =
-  | 'public'         // surfaces to the channel (user sees it)
-  | 'internal'       // agents see it, user does not
+  | 'public'         // landed as a message/renderable — the student sees it
+  | 'internal'       // agents see it, the student does not
   | 'agent-only';    // only specific agents see it
 
-export interface EventSubscription {
-  types?: string[];
-  fromRoles?: string[];
-  visibility?: EventVisibility[];
-  debounce?: {
-    minEvents?: number;
-    maxLatencyMs?: number;
-    coalesce?: boolean;
-  };
+export interface GardnerTrigger {      // ADR-0004, tentative values
+  minEvents: number;                   // 4
+  maxLatencyMs: number;                // 8000
+  coalesce: boolean;                   // true
 }
 
-export interface EventStream {
-  emit(event: Omit<SessionEvent, 'id' | 'seq' | 'at'>): Promise<SessionEvent>;
-  read(opts: { from?: number; to?: number; types?: string[] }): AsyncIterable<SessionEvent>;
-  flush(role: string): Promise<void>;
+// Implemented over the worker's lease queue, not a framework primitive.
+export interface AnalyticLane {
+  drained(taskId: string, uptoSeq: number): Promise<void>;   // the former awaitLane('analytic')
+  flush(taskId: string): Promise<void>;                        // explicit trigger before a transition
 }
 ```
 
-The visibility flag is the structural enforcement of Foundation rule F3 (Gardner's analysis stays internal). Gardner emits events with `visibility: 'internal'`. The channel adapter only forwards `visibility: 'public'`. This is enforced at dispatch, not in agent prompts.
+## Policy Gate: Limpide's evaluators on the host registry
 
-### The dispatcher
-
-```typescript
-export interface Dispatcher {
-  route(event: SessionEvent): Promise<void>;
-  awaitLane(lane: DispatchLane): Promise<void>;
-  metrics(): DispatcherMetrics;
-}
-```
-
-The `awaitLane` method coordinates the Playbook with Gardner without polling. When the Tutor finishes Teach-back and is ready to evaluate, the Playbook calls `dispatch.awaitLane('analytic')`, which blocks until Gardner has consumed all pending events. Then the Playbook reads the latest gap records from memory and decides the transition.
-
-### Policy Gate extensions
+The Policy Gate is the host's. Limpide contributes *evaluators* — registered with the host's `PolicyGateRegistry` from the plugin package, the same seam Email EA uses — and they are invoked from inside the Flue workflow around tool calls, outbound events, state transitions, and probes ("the envelope in miniature", AYA ADR-0014 §2). Gate initialisation errors fail closed; there is no permissive fallback. The evaluator surface:
 
 ```typescript
-export interface Policy {
+export interface LimpidePolicy {
   evaluateTool(call: ToolCall, ctx: PolicyContext): Promise<PolicyDecision>;
   evaluateEvent(event: SessionEvent, ctx: PolicyContext): Promise<PolicyDecision>;
-  evaluateTransition(from: string, to: string, ctx: PolicyContext): Promise<PolicyDecision>;
+  evaluateTransition(from: SessionState, to: SessionState, ctx: PolicyContext): Promise<PolicyDecision>;
   evaluateProbe(probe: Probe, ctx: PolicyContext): Promise<PolicyDecision>;
 }
 
@@ -229,7 +161,7 @@ The Tutor sees the denial reason and adapts conversationally; advancing is not o
 
 ### The disclosure classifier
 
-A third model role, distinct from Tutor and Gardner. It sits on the interactive path (synchronous, before a probe is dispatched) and does exactly one thing: read a probe's `utterance` and assign a structured `disclosure` label plus a free-text reason. It is **program-agnostic** — it judges the intrinsic revealing-power of the words, not their appropriateness for any student or program — which makes it a pure function of the text: testable in isolation, reusable everywhere, and small. It is Haiku-class or smaller (a fine-tuned or partially deterministic classifier is plausible, since the job is narrow), and it must be fast because it is on the hot path, unlike Gardner which is deliberately debounced. Keeping it separate from the Tutor prevents the agent being measured from grading its own leakage; keeping it separate from Gardner keeps the analytic agent off the interactive path.
+A third model role, distinct from Tutor and Gardner, implemented as a Flue workflow with a structured `result` schema (or, if latency demands it, a plain provider call from the probe tool — ADR-0019, Tentative), never as an agent with a session. It sits on the interactive path (synchronous, before a probe is dispatched) and does exactly one thing: read a probe's `utterance` and assign a structured `disclosure` label plus a free-text reason. It is **program-agnostic** — it judges the intrinsic revealing-power of the words, not their appropriateness for any student or program — which makes it a pure function of the text: testable in isolation, reusable everywhere, and small. It is Haiku-class or smaller (a fine-tuned or partially deterministic classifier is plausible, since the job is narrow), and it must be fast because it is on the hot path, unlike Gardner which is deliberately debounced. Keeping it separate from the Tutor prevents the agent being measured from grading its own leakage; keeping it separate from Gardner keeps the analytic agent off the interactive path.
 
 ### Safeguarding gate
 
@@ -237,7 +169,7 @@ Foundation rule F12 (safety overrides pedagogy, ADR-0014) is enforced at the Pol
 
 ## The data model
 
-All entities live in SurrealDB. The TypeScript interfaces below are mirrored as SurrealDB schema definitions in `surrealdb/schema.surql` (to be written).
+All entities live in SurrealDB, in Limpide's **plugin-private schema** — its own Surql file shipped in the plugin package, never additions to the host's `packages/platform/sql/schema.surql` (AYA ADR-0017 §2). Table names are prefixed (`limpide_concept`, `limpide_gap`, …); record ids stay opaque at repository boundaries. Every table carries `$auth`-scoped PERMISSIONS clauses, because the browser reads these tables through live queries (ADR-0020). The TypeScript interfaces below are the contract; the Surql is derived from them (to be written).
 
 ### Curriculum graph (shared, slow-changing)
 
@@ -550,15 +482,16 @@ Heterogeneous models, intentionally:
 
 - **Tutor: Claude Opus.** The tutoring loop demands strong reasoning — Socratic probing, judging when an explanation is real vs rehearsed, knowing when to bridge vs deliver, reading the student's affect from text. This is not a small-model task.
 - **Gardner: Claude Haiku.** Structured extraction from text. Smaller, faster, cheaper. Specialized prompt with strict output schema.
+- **Disclosure classifier: Haiku-class or smaller** (ADR-0011) — on the hot path, so speed matters more than depth.
 - **Background work: Claude Haiku or smaller.** Periodic curriculum maintenance, agenda audits, decay calculations.
 
-agent-core's `setLLMClient` is per-agent-friendly. No shared model.
+Flue takes a `model` specifier per `createAgent` and allows per-call overrides, so heterogeneous models are the default, not an extension. Model and provider configuration lives in the worker's environment, never in the plugin's agent modules. No shared model.
 
 ## Data scopes and consent boundaries
 
 Limpide's data is organized into four nested scopes. The boundaries between scopes are enforced at the storage layer and at the Policy Gate. Data flows *up* through the scopes only with explicit consent and only as anonymized aggregates; data never flows *down* without authorization.
 
-This four-scope model is shared across the AYA platform — Limpide, Aegilo (geopolitical intelligence), and any future Skills use the same architecture. Building it correctly once means every Skill inherits sovereign-by-default storage and federated-with-consent network features.
+This four-scope model is shared across the AYA platform — Limpide, Aegilo (geopolitical intelligence), and any future plugin use the same architecture. Building it correctly once means every plugin inherits sovereign-by-default storage and federated-with-consent network features. Identity and roles come from Logto through the host (ADR-0007); the scope a reader may see is enforced by Surreal permissions on the read path and by the gate on the write path (ADR-0020).
 
 ### The four scopes
 
@@ -584,7 +517,7 @@ Three commitments make the scope model trustworthy:
 
 **Network value flows back to contributors.** The benchmarks computed from the network are visible only to institutions that contribute. Non-contributing institutions can use Limpide for personal and institutional purposes but do not receive network benchmarks. This is the incentive design: contributing makes the network more valuable, and the network's value is structurally returned to those who contribute. Pricing reflects this — the standard tier includes network participation; an opt-out tier exists for institutions that cannot share aggregated data (defense, certain healthcare and finance contexts) and they pay a premium for the additional isolation.
 
-The cross-Skill consequence: once this is built for Limpide, it serves Aegilo's geopolitical intelligence (companies opt into network risk benchmarks while keeping their proprietary supply-chain data sovereign) and any future Skill the same way. The federated-with-consent architecture is the platform's most defensible long-term position.
+The cross-plugin consequence: once this is built for Limpide, it serves Aegilo's geopolitical intelligence (companies opt into network risk benchmarks while keeping their proprietary supply-chain data sovereign) and any future plugin the same way. The federated-with-consent architecture is the platform's most defensible long-term position.
 
 ### Phasing
 
@@ -598,27 +531,22 @@ The discipline that protects this phasing: **the Phase 3 features must be design
 
 ## Deployment topologies
 
-**Local-first / desktop.** SurrealDB embedded as a library in the agent process. Single binary deployment. No edge layer. Frontend talks directly to the agent process. Useful for development, for highly privacy-sensitive deployments (a school running its own instance), and eventually for the offline-capable mode.
+Every topology is the same three processes — host frontend, worker (Flue), SurrealDB — with the Limpide plugin listed in the host config. SaaS versus on-prem is packaging, not a fork (AYA host design doc, 2026-08-22).
 
-**Hosted / multi-tenant.** SurrealDB in server mode (single-node initially, distributed cluster eventually). Cloudflare Workers as the edge. Agent process running on a dedicated host or container. Frontend served via Cloudflare Pages. This is the production deployment for the public service.
+**Local-first / desktop (the AYA edge profile).** SurrealDB embedded, the worker and frontend on the same machine, AYA's local single-user identity with optional pairing to an institution's Logto (ADR-0007). Useful for development, for highly privacy-sensitive deployments (a school running its own instance), and eventually for the offline-capable mode.
 
-**Hybrid.** Agent process running in the cloud, but the student's session data remains in a local SurrealDB instance that syncs selectively. This is the path for institutions that want hosted reasoning but local data sovereignty. Not in scope for MVP; the data model should not preclude it.
+**Hosted / multi-tenant.** SurrealDB in server mode (single-node initially, distributed cluster eventually), Logto Cloud or self-hosted, the worker on a dedicated host or container (Flue builds for Node today; Cloudflare Containers remain a hosting option, not an architecture choice — ADR-0020). This is the production deployment for the public service.
 
-## The migration path from AYA's Convex to SurrealDB
+**Hybrid.** Worker in the cloud, but the student's session data remains in a local SurrealDB instance that syncs selectively. This is the path for institutions that want hosted reasoning but local data sovereignty. Not in scope for MVP; the data model should not preclude it.
 
-Documented in `docs/ADR/0005-aya-migration-to-surrealdb.md`. Order, briefly:
+## AYA's substrate, as it actually is
 
-1. New SurrealDB-backed Memory implementation in agent-core. Existing skills continue using Convex/InMemory/Falkor backends unchanged.
-2. Limpide ships on the SurrealDB Memory backend, with its own SurrealDB instance. Patterns are proven in production.
-3. AYA's other primitives (Tasks, Events, Foundation) port to SurrealDB in one cohesive pass — the boundaries between primitives are too tight for piecemeal migration.
-4. Convex deprecated for AYA. Existing data migrated. WebSocket subscriptions move from Convex's reactive queries to Cloudflare Workers proxying SurrealDB live queries.
-
-Step 4 is months out. Steps 1–2 are the immediate work.
+The April 2026 plan had AYA on Convex, Limpide on its own SurrealDB, and a four-phase migration between them (ADR-0005). AYA instead flipped outright — the Convex backend was deleted, SurrealDB + Logto became the only target stack (AYA ADR-0006, 0008), agent-core was retired for Flue (AYA ADR-0014), and the host grew a plugin contract (AYA ADR-0017) and a scheduled-playbook clock (AYA ADR-0018). Limpide therefore starts on the finished substrate: one SurrealDB, host tables plus Limpide's plugin-private tables, one worker, Logto. There is no migration path left for Limpide to walk; the remaining sequencing constraint is the host's own — Limpide UI does not land in the host's `src/` until the plugin extraction (AYA F-042) exists, the same rule Aegilo is under.
 
 ## Status of this document
 
-**Settled.** The overall stack (SurrealDB + Workers + Node agent process + agent-core). The two-agent-on-shared-session shape. The Session/AttachedAgent/Dispatcher interface signatures. The data model entities. The AYA primitive mapping. The four-scope data model (personal, cohort, institutional, network) and the phased introduction of federated network features. Probe gating: the `Probe` entity, `evaluateProbe`, the inline disclosure classifier as a third model role, and the four-layer policy/learning stack with propose-vs-enact discipline on rule evolution (`docs/ADR/0009-probe-gating.md`). Concept depth as an index into a per-concept understanding ladder, with the program-required floor and student-desired ceiling and the `desiredLevel >= requiredLevel` invariant (`docs/ADR/0010-concept-depth.md`). The `expressiveBaseline` on the student model and the three orthogonal axes — depth, expression, disclosure (`docs/ADR/0012-expressive-baseline.md`). The canonical concept graph as a timing-free superset with programs as referencing overlays (`docs/ADR/0013-canonical-graph-and-overlays.md`). The safeguarding gate (F12) and the per-deployment child-data controller model (`docs/ADR/0014-safeguarding-and-child-data.md`). The four-layer system-evaluation stack as the evidence gate for the self-learning loop (`docs/ADR/0016-system-evaluation.md`), and the interactive-path latency/cost budget (`docs/ADR/0017-latency-cost-budget.md`). Per-rung, history-derived, differentially-decaying confidence (`docs/ADR/0018-confidence-model.md`).
+**Settled.** The overall stack: the AYA host (frontend + `@aya/platform` + `@aya/runtime`), the worker with Flue as the execution engine, one SurrealDB, Logto; Limpide as a plugin package with no process of its own (`docs/ADR/0019-flue-execution-engine-and-plugin-packaging.md`, `0020-edge-layer-follows-aya.md`, `0007-auth-provider-logto.md`). The two-agent shape as two Flue sessions joined by the Task and the Event Journal, Gardner never a subagent of the Tutor, visibility enforced at landing (`docs/ADR/0004-two-agent-shape.md` as amended). Limpide's gate evaluators registered on the host's Policy Gate registry. The data model entities, in plugin-private Surreal tables. The AYA primitive mapping. The four-scope data model (personal, cohort, institutional, network) and the phased introduction of federated network features. Probe gating: the `Probe` entity, `evaluateProbe`, the inline disclosure classifier as a third model role, and the four-layer policy/learning stack with propose-vs-enact discipline on rule evolution (`docs/ADR/0009-probe-gating.md`). Concept depth as an index into a per-concept understanding ladder, with the program-required floor and student-desired ceiling and the `desiredLevel >= requiredLevel` invariant (`docs/ADR/0010-concept-depth.md`). The `expressiveBaseline` on the student model and the three orthogonal axes — depth, expression, disclosure (`docs/ADR/0012-expressive-baseline.md`). The canonical concept graph as a timing-free superset with programs as referencing overlays (`docs/ADR/0013-canonical-graph-and-overlays.md`). The safeguarding gate (F12) and the per-deployment child-data controller model (`docs/ADR/0014-safeguarding-and-child-data.md`). The four-layer system-evaluation stack as the evidence gate for the self-learning loop (`docs/ADR/0016-system-evaluation.md`), and the interactive-path latency/cost budget (`docs/ADR/0017-latency-cost-budget.md`). Per-rung, history-derived, differentially-decaying confidence (`docs/ADR/0018-confidence-model.md`).
 
-**Tentative.** The specific confidence math values (the statistical form and decay constants are in `docs/ADR/0018-confidence-model.md`). The exact cooldown durations. The choice of Claude Opus vs other strong-reasoning models for Tutor. The disclosure enum values and the classifier's model (prompted, fine-tuned, or partially deterministic). The blast-radius thresholds separating auto-applicable parameter nudges from human-review rule changes. The exact shape of the `Program` and `StudentEnrollment` entities and the authoring of per-concept ladders and required rungs (`docs/ADR/0010-concept-depth.md`). The Workers Durable Objects design for WebSocket fan-out (probably right, not yet built). The specific differential privacy parameters and aggregation library choice for Phase 3 network features.
+**Tentative.** The specific confidence math values (the statistical form and decay constants are in `docs/ADR/0018-confidence-model.md`). The exact cooldown durations. The choice of Claude Opus vs other strong-reasoning models for Tutor. The disclosure enum values and the classifier's model (prompted, fine-tuned, or partially deterministic). The blast-radius thresholds separating auto-applicable parameter nudges from human-review rule changes. The exact shape of the `Program` and `StudentEnrollment` entities and the authoring of per-concept ladders and required rungs (`docs/ADR/0010-concept-depth.md`). Whether Gardner is one long-lived Flue session per Task or one workflow run per debounce trigger, and whether the classifier is a Flue workflow or a plain provider call (ADR-0019). The plugin package name. Whether cohort-scope teacher views are live queries with permission clauses or server-side BFF aggregation (ADR-0020). Whether prerequisites and cross-substrate links are `RELATE` edges or record links in the plugin schema (ADR-0019). The specific differential privacy parameters and aggregation library choice for Phase 3 network features.
 
-**Open.** The frontend architecture in detail (we have constraints but no concrete spec). The auth flow (likely Clerk or similar, not decided). The licensing of the agent-core extensions (must coordinate with existing agent-core license). The attribution function and its external validation, and classifier calibration methodology (`MEASUREMENT.md`, ADR-0009). The contractual structure that codifies "Aegilo never sells the network's data" — corporate articles, customer contracts, third-party attestation, or all three.
+**Open.** The Limpide frontend surface in detail — which widgets and `limpide.*` renderable kinds, within the host's Renderable-first UI (we have constraints but no concrete spec; ADR-0008 placeholder). The licensing of the Limpide plugin itself, given the host is Apache 2.0 and Aegilo's plugin is proprietary (ADR-0006 placeholder). The attribution function and its external validation, and classifier calibration methodology (`MEASUREMENT.md`, ADR-0009). The contractual structure that codifies "Aegilo never sells the network's data" — corporate articles, customer contracts, third-party attestation, or all three.
