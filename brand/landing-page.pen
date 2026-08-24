@@ -1,0 +1,856 @@
+{
+  "version": "2.13",
+  "children": [
+    {
+      "type": "frame",
+      "id": "n8iOg",
+      "x": 0,
+      "y": 0,
+      "name": "Waitlist — FR",
+      "clip": true,
+      "width": 1440,
+      "height": 1024,
+      "fill": "$paper",
+      "layout": "vertical",
+      "padding": [
+        44,
+        80,
+        40,
+        80
+      ],
+      "justifyContent": "space_between",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "rectangle",
+          "id": "UTw3D",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 0,
+          "name": "Paper Vignette",
+          "fill": {
+            "type": "gradient",
+            "gradientType": "radial",
+            "enabled": true,
+            "rotation": 0,
+            "size": {
+              "width": 1.3,
+              "height": 1.3
+            },
+            "colors": [
+              {
+                "color": "#FFFFFF80",
+                "position": 0
+              },
+              {
+                "color": "#F4EFE500",
+                "position": 0.7
+              }
+            ],
+            "center": {
+              "x": 0.28,
+              "y": 0.1
+            }
+          },
+          "width": 1440,
+          "height": 1024
+        },
+        {
+          "type": "frame",
+          "id": "KFVMF",
+          "name": "Top Bar",
+          "width": "fill_container",
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "mTi60",
+              "name": "Beta Label",
+              "fill": "$ink-soft",
+              "content": "BÊTA PRIVÉE · 2026",
+              "fontFamily": "$font-mono",
+              "fontSize": 13,
+              "fontWeight": "normal",
+              "letterSpacing": 2.5
+            },
+            {
+              "type": "frame",
+              "id": "WgwRN",
+              "name": "Lang Toggle",
+              "fill": "$paper-deep",
+              "cornerRadius": 20,
+              "stroke": "$hairline",
+              "strokeWidth": 1,
+              "gap": 2,
+              "padding": 4,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "mpBR4",
+                  "name": "FR",
+                  "fill": "$accent",
+                  "cornerRadius": 16,
+                  "padding": [
+                    6,
+                    14
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "hjgda",
+                      "name": "FR Label",
+                      "fill": "$paper",
+                      "content": "FR",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 12,
+                      "fontWeight": "normal",
+                      "letterSpacing": 1
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "L8DEe",
+                  "name": "EN",
+                  "cornerRadius": 16,
+                  "padding": [
+                    6,
+                    14
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Lk2nN",
+                      "name": "EN Label",
+                      "fill": "$ink-soft",
+                      "content": "EN",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 12,
+                      "fontWeight": "normal",
+                      "letterSpacing": 1
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "tv4Hi",
+          "name": "Content",
+          "width": 720,
+          "layout": "vertical",
+          "gap": 40,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "i7AKId",
+              "name": "Wordmark",
+              "fill": "$ink",
+              "content": "Limpide",
+              "fontFamily": "$font-script",
+              "fontSize": 168,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "A5S4N",
+              "name": "Hero Text",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 22,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "V3846",
+                  "name": "Tagline",
+                  "fill": "$ink",
+                  "content": "Apprendre à comprendre.",
+                  "fontFamily": "$font-serif",
+                  "fontSize": 54,
+                  "fontWeight": "500"
+                },
+                {
+                  "type": "text",
+                  "id": "LvzdV",
+                  "name": "Supporting",
+                  "fill": "$ink-soft",
+                  "content": "Le savoir est partout. Comprendre est rare.",
+                  "fontFamily": "$font-serif",
+                  "fontSize": 23,
+                  "fontWeight": "normal",
+                  "fontStyle": "italic"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "cdSca",
+              "name": "Body",
+              "fill": "$ink-soft",
+              "textGrowth": "fixed-width",
+              "width": 600,
+              "content": "Limpide aide votre enfant — ou vous-même — à comprendre en profondeur, penser clairement et dire ce que vous voulez dire. Le genre de compréhension qui reste, bien après la leçon.",
+              "lineHeight": 1.6,
+              "textAlign": "center",
+              "fontFamily": "$font-sans",
+              "fontSize": 18,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "ub6kV",
+              "name": "Triad",
+              "gap": 14,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "l0B00R",
+                  "name": "Pillar 1",
+                  "fill": "$ink-soft",
+                  "content": "COMPRENDRE EN PROFONDEUR",
+                  "fontFamily": "$font-mono",
+                  "fontSize": 13,
+                  "fontWeight": "normal",
+                  "letterSpacing": 2
+                },
+                {
+                  "type": "text",
+                  "id": "bcEDb",
+                  "name": "Dot 1",
+                  "fill": "$accent-light",
+                  "content": "·",
+                  "fontFamily": "$font-mono",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "t4U9bT",
+                  "name": "Pillar 2",
+                  "fill": "$ink-soft",
+                  "content": "PENSER CLAIREMENT",
+                  "fontFamily": "$font-mono",
+                  "fontSize": 13,
+                  "fontWeight": "normal",
+                  "letterSpacing": 2
+                },
+                {
+                  "type": "text",
+                  "id": "sFd2D",
+                  "name": "Dot 2",
+                  "fill": "$accent-light",
+                  "content": "·",
+                  "fontFamily": "$font-mono",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "K9VdSk",
+                  "name": "Pillar 3",
+                  "fill": "$ink-soft",
+                  "content": "S'EXPRIMER",
+                  "fontFamily": "$font-mono",
+                  "fontSize": 13,
+                  "fontWeight": "normal",
+                  "letterSpacing": 2
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "TaNuB",
+              "name": "Form",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 20,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "r5h9n9",
+                  "name": "Form Heading",
+                  "fill": "$ink",
+                  "content": "Informez-moi du lancement.",
+                  "fontFamily": "$font-serif",
+                  "fontSize": 30,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "frame",
+                  "id": "Bf3xu",
+                  "name": "Input Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "B1CWJ",
+                      "name": "Email Field",
+                      "width": 400,
+                      "fill": "$paper-deep",
+                      "cornerRadius": 6,
+                      "stroke": "$hairline",
+                      "strokeWidth": 1,
+                      "padding": [
+                        16,
+                        22
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "b6s3o",
+                          "name": "Placeholder",
+                          "fill": "$ink-soft",
+                          "content": "votre@email.com",
+                          "fontFamily": "$font-sans",
+                          "fontSize": 16,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "X5Nsl",
+                      "name": "Submit Button",
+                      "fill": "$accent",
+                      "cornerRadius": 6,
+                      "padding": [
+                        16,
+                        28
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "w0bmNM",
+                          "name": "Button Label",
+                          "fill": "$paper",
+                          "content": "Me prévenir",
+                          "fontFamily": "$font-sans",
+                          "fontSize": 16,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "iVnhL",
+                  "name": "Reassurance",
+                  "fill": "$ink-soft",
+                  "content": "Un seul email au lancement. Jamais de bruit.",
+                  "fontFamily": "$font-mono",
+                  "fontSize": 12,
+                  "fontWeight": "normal",
+                  "letterSpacing": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "okOIp",
+          "name": "Footer",
+          "width": "fill_container",
+          "gap": 14,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "NHx8n",
+              "name": "Footer Wordmark",
+              "fill": "$ink-soft",
+              "content": "Limpide",
+              "fontFamily": "$font-script",
+              "fontSize": 30,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "text",
+              "id": "w0StDd",
+              "name": "Footer Dot",
+              "fill": "$accent-light",
+              "content": "·",
+              "fontFamily": "$font-mono",
+              "fontSize": 12,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "text",
+              "id": "h4NbH2",
+              "name": "Footer Tag",
+              "fill": "$ink-soft",
+              "content": "Une pensée claire.",
+              "fontFamily": "$font-mono",
+              "fontSize": 12,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "P1Xu8",
+      "x": 1560,
+      "y": 0,
+      "name": "Waitlist — EN",
+      "clip": true,
+      "width": 1440,
+      "height": 1024,
+      "fill": "$paper",
+      "layout": "vertical",
+      "padding": [
+        44,
+        80,
+        40,
+        80
+      ],
+      "justifyContent": "space_between",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "rectangle",
+          "id": "EZqTJ",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 0,
+          "name": "Paper Vignette",
+          "fill": {
+            "type": "gradient",
+            "gradientType": "radial",
+            "enabled": true,
+            "rotation": 0,
+            "size": {
+              "width": 1.3,
+              "height": 1.3
+            },
+            "colors": [
+              {
+                "color": "#FFFFFF80",
+                "position": 0
+              },
+              {
+                "color": "#F4EFE500",
+                "position": 0.7
+              }
+            ],
+            "center": {
+              "x": 0.28,
+              "y": 0.1
+            }
+          },
+          "width": 1440,
+          "height": 1024
+        },
+        {
+          "type": "frame",
+          "id": "Ut9N0",
+          "name": "Top Bar",
+          "width": "fill_container",
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "Ji9IO",
+              "name": "Beta Label",
+              "fill": "$ink-soft",
+              "content": "PRIVATE BETA · 2026",
+              "fontFamily": "$font-mono",
+              "fontSize": 13,
+              "fontWeight": "normal",
+              "letterSpacing": 2.5
+            },
+            {
+              "type": "frame",
+              "id": "gCycl",
+              "name": "Lang Toggle",
+              "fill": "$paper-deep",
+              "cornerRadius": 20,
+              "stroke": "$hairline",
+              "strokeWidth": 1,
+              "gap": 2,
+              "padding": 4,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "G7QaEa",
+                  "name": "FR",
+                  "fill": "#00000000",
+                  "cornerRadius": 16,
+                  "padding": [
+                    6,
+                    14
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Ad7Bn",
+                      "name": "FR Label",
+                      "fill": "$ink-soft",
+                      "content": "FR",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 12,
+                      "fontWeight": "normal",
+                      "letterSpacing": 1
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "hs9VT",
+                  "name": "EN",
+                  "fill": "$accent",
+                  "cornerRadius": 16,
+                  "padding": [
+                    6,
+                    14
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "GgO20",
+                      "name": "EN Label",
+                      "fill": "$paper",
+                      "content": "EN",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 12,
+                      "fontWeight": "normal",
+                      "letterSpacing": 1
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "XozZy",
+          "name": "Content",
+          "width": 720,
+          "layout": "vertical",
+          "gap": 40,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "doPVe",
+              "name": "Wordmark",
+              "fill": "$ink",
+              "content": "Limpide",
+              "fontFamily": "$font-script",
+              "fontSize": 168,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "XB5BM",
+              "name": "Hero Text",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 22,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "rxTB7",
+                  "name": "Tagline",
+                  "fill": "$ink",
+                  "content": "Learn to understand.",
+                  "fontFamily": "$font-serif",
+                  "fontSize": 54,
+                  "fontWeight": "500"
+                },
+                {
+                  "type": "text",
+                  "id": "L9s94",
+                  "name": "Supporting",
+                  "fill": "$ink-soft",
+                  "content": "Knowledge is everywhere now. Understanding is rare.",
+                  "fontFamily": "$font-serif",
+                  "fontSize": 23,
+                  "fontWeight": "normal",
+                  "fontStyle": "italic"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "hbNet",
+              "name": "Body",
+              "fill": "$ink-soft",
+              "textGrowth": "fixed-width",
+              "width": 600,
+              "content": "Limpide helps your child — or you — understand deeply, think clearly, and say what you mean. The kind of understanding that stays with you long after the lesson is over.",
+              "lineHeight": 1.6,
+              "textAlign": "center",
+              "fontFamily": "$font-sans",
+              "fontSize": 18,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "f24tyF",
+              "name": "Triad",
+              "gap": 14,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "JZPAL",
+                  "name": "Pillar 1",
+                  "fill": "$ink-soft",
+                  "content": "UNDERSTAND DEEPLY",
+                  "fontFamily": "$font-mono",
+                  "fontSize": 13,
+                  "fontWeight": "normal",
+                  "letterSpacing": 2
+                },
+                {
+                  "type": "text",
+                  "id": "MMjPb",
+                  "name": "Dot 1",
+                  "fill": "$accent-light",
+                  "content": "·",
+                  "fontFamily": "$font-mono",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "kadR7",
+                  "name": "Pillar 2",
+                  "fill": "$ink-soft",
+                  "content": "THINK CLEARLY",
+                  "fontFamily": "$font-mono",
+                  "fontSize": 13,
+                  "fontWeight": "normal",
+                  "letterSpacing": 2
+                },
+                {
+                  "type": "text",
+                  "id": "CMn8F",
+                  "name": "Dot 2",
+                  "fill": "$accent-light",
+                  "content": "·",
+                  "fontFamily": "$font-mono",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "y6ByWS",
+                  "name": "Pillar 3",
+                  "fill": "$ink-soft",
+                  "content": "EXPRESS YOURSELF",
+                  "fontFamily": "$font-mono",
+                  "fontSize": 13,
+                  "fontWeight": "normal",
+                  "letterSpacing": 2
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "vY49z",
+              "name": "Form",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 20,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "gJ2lG",
+                  "name": "Form Heading",
+                  "fill": "$ink",
+                  "content": "Be the first to know.",
+                  "fontFamily": "$font-serif",
+                  "fontSize": 30,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "frame",
+                  "id": "FpMs3",
+                  "name": "Input Row",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "k9kYm",
+                      "name": "Email Field",
+                      "width": 400,
+                      "fill": "$paper-deep",
+                      "cornerRadius": 6,
+                      "stroke": "$hairline",
+                      "strokeWidth": 1,
+                      "padding": [
+                        16,
+                        22
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "lBepK",
+                          "name": "Placeholder",
+                          "fill": "$ink-soft",
+                          "content": "your@email.com",
+                          "fontFamily": "$font-sans",
+                          "fontSize": 16,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "K4W4aU",
+                      "name": "Submit Button",
+                      "fill": "$accent",
+                      "cornerRadius": 6,
+                      "padding": [
+                        16,
+                        28
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "fg8nN",
+                          "name": "Button Label",
+                          "fill": "$paper",
+                          "content": "Notify me",
+                          "fontFamily": "$font-sans",
+                          "fontSize": 16,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "gWVqY",
+                  "name": "Reassurance",
+                  "fill": "$ink-soft",
+                  "content": "One email when we open. No noise, ever.",
+                  "fontFamily": "$font-mono",
+                  "fontSize": 12,
+                  "fontWeight": "normal",
+                  "letterSpacing": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "SYNNR",
+          "name": "Footer",
+          "width": "fill_container",
+          "gap": 14,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "gbC5b",
+              "name": "Footer Wordmark",
+              "fill": "$ink-soft",
+              "content": "Limpide",
+              "fontFamily": "$font-script",
+              "fontSize": 30,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "text",
+              "id": "R2vis",
+              "name": "Footer Dot",
+              "fill": "$accent-light",
+              "content": "·",
+              "fontFamily": "$font-mono",
+              "fontSize": 12,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "text",
+              "id": "fEcVR",
+              "name": "Footer Tag",
+              "fill": "$ink-soft",
+              "content": "A clearer mind.",
+              "fontFamily": "$font-mono",
+              "fontSize": 12,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variables": {
+    "paper": {
+      "type": "color",
+      "value": "#F4EFE5"
+    },
+    "paper-deep": {
+      "type": "color",
+      "value": "#ECE4D5"
+    },
+    "ink": {
+      "type": "color",
+      "value": "#26221E"
+    },
+    "ink-soft": {
+      "type": "color",
+      "value": "#5A5248"
+    },
+    "accent": {
+      "type": "color",
+      "value": "#2F4F4A"
+    },
+    "accent-light": {
+      "type": "color",
+      "value": "#7A9A93"
+    },
+    "hairline": {
+      "type": "color",
+      "value": "#2F4F4A33"
+    },
+    "font-script": {
+      "type": "string",
+      "value": "Pinyon Script"
+    },
+    "font-serif": {
+      "type": "string",
+      "value": "Cormorant Garamond"
+    },
+    "font-sans": {
+      "type": "string",
+      "value": "Inter"
+    },
+    "font-mono": {
+      "type": "string",
+      "value": "IBM Plex Mono"
+    }
+  }
+}
