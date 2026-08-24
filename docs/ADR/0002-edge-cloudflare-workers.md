@@ -1,7 +1,9 @@
 # ADR-0002: Cloudflare Workers for the edge layer
 
-**Status:** Accepted
+**Status:** Superseded by ADR-0020 (2026-08-24)
 **Date:** 2026-04-29
+
+> **Superseded.** AYA exited Convex without a Workers relay: the browser subscribes to SurrealDB live queries directly, the Node worker hosts the BFF routes and webhooks, and scheduled work is the host's scheduled-playbook clock (AYA ADR-0018). Limpide follows that shape and has no edge tier of its own — see `0020-edge-layer-follows-aya.md`. The text below is kept as decision history; the one part that survives is that the agent loop stays in the worker process.
 
 ## Context
 
