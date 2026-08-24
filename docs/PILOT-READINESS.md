@@ -4,10 +4,12 @@ A one-page orientation for a collaborator or counsel joining now. Limpide is a S
 
 ## Where the design stands
 
-The conceptual docs are written and mutually consistent. Eighteen ADRs exist (0001–0005 foundational stack; 0006–0008 still open placeholders; 0009–0018 the design worked out recently). The load-bearing decisions:
+The conceptual docs are written and mutually consistent. Twenty ADRs exist (0001–0005 the original foundational stack, of which 0002 and 0003 are now superseded; 0006 and 0008 still open placeholders; 0007 closed on Logto; 0009–0018 the pedagogical design; 0019–0020 the August 2026 realignment onto AYA's actual substrate). The load-bearing decisions:
+
+- **Substrate: Flue inside the AYA envelope, Limpide as a plugin** (ADR-0019, ADR-0020, ADR-0007). AYA retired its bespoke agent framework for Flue, flipped to SurrealDB + Logto, dropped the Workers edge, and became a plugin host. Limpide adds no process of its own; it contributes agents, tools, evaluators, schema, and playbooks to the host's three processes. The pedagogy did not move; the framework under it did.
 
 - **Measurement is process, not state** (`MEASUREMENT.md`). Four signals — iteration delta, recovery-under-probing, self-noticing latency, unprompted transfer — drive everything, kept off the optimisation loop (Goodhart discipline).
-- **Two agents** — Tutor (Opus, conversational) and Gardner (Haiku, analytic) on a shared session (ADR-0004), with a deterministic **Policy Gate** enforcing Foundation rules **F1–F12**.
+- **Two agents** — Tutor (Opus-class, conversational) and Gardner (Haiku-class, analytic) as two Flue sessions on one AYA Task, joined by the Event Journal (ADR-0004 as amended), with the host's deterministic **Policy Gate** running Limpide's evaluators for Foundation rules **F1–F12**.
 - **Probe gating** (ADR-0009): a Tutor declares intent, a separate inline classifier labels *disclosure*, the gate decides deterministically, Gardner attributes recovery. Self-learning proposes; it never enacts.
 - **Three orthogonal axes**: depth (ADR-0010), expression (ADR-0012), disclosure (ADR-0009) — conflating them is the trap.
 - **Canonical concept graph + curriculum overlays** (ADR-0013): one timing-free superset; Vaud, Valais, EPFL-year-1 are overlays that reference it; enables cross-overlay benchmarking.
@@ -37,7 +39,7 @@ The conceptual docs are written and mutually consistent. Eighteen ADRs exist (00
 
 **Build prerequisites (engineering):**
 
-- The substrate: agent-core + SurrealDB (ADRs 0001, 0003, 0005), the Policy Gate with F1–F12 and probe gating, the two-agent session.
+- The substrate is AYA's and mostly exists: SurrealDB + Logto, the worker on Flue, the refs-only Dispatch adapter, the Policy Gate registry, the Event Journal. What Limpide must build: the plugin package against the host contract (AYA ADR-0017 — gated on the host's plugin extraction, F-042, landing first), the F1–F12 and probe-gating evaluators, the Tutor/Gardner/classifier Flue definitions, the plugin-private schema (ADRs 0019, 0020, 0007).
 - **Curriculum import** of the chosen Vaud math cluster as an overlay (skeleton + grade/timing), then LLM-drafted ladders/probes and human-authored cross-substrate links (ADR-0013).
 - The **disclosure classifier** and its gold set: re-label MathDial + author-time labels + synthetic quadruples (ADR-0011, `methods/synthetic-probe-generation.md`).
 - The **expressive-baseline** initialisation and the **per-rung confidence** computation (ADRs 0012, 0018).
@@ -51,7 +53,7 @@ The conceptual docs are written and mutually consistent. Eighteen ADRs exist (00
 
 ## Suggested sequence
 
-1. In parallel from day one: engage **counsel** (DPIA, reporting, consent) and stand up the **agent-core/SurrealDB + Policy Gate** substrate.
+1. In parallel from day one: engage **counsel** (DPIA, reporting, consent) and stand up the **Limpide plugin skeleton** on the AYA host — package, manifest, plugin-private schema, evaluator registration — which depends on AYA's plugin extraction (F-042) being far enough along to boot a bare host with one plugin listed.
 2. Import the **Vaud math cluster**; draft ladders/probes; author cross-links.
 3. Build the **disclosure classifier** from the math gold set; stand up the **regression + replay harness**.
 4. **Internal dogfooding** against simulated students and the team; tune confidence and baselines.
