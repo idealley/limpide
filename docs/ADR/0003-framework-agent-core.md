@@ -1,7 +1,9 @@
 # ADR-0003: Build on agent-core, not from scratch
 
-**Status:** Accepted
+**Status:** Superseded by ADR-0019 (2026-08-24)
 **Date:** 2026-04-29
+
+> **Superseded.** AYA retired `@aegilo/agent-core` and converged on Flue as the execution engine (AYA ADR-0014, June 2026), and became a plugin host in which verticals are packages, not Skills (AYA ADR-0017, August 2026). Limpide now runs on Flue inside the AYA envelope and ships as an AYA plugin — see `0019-flue-execution-engine-and-plugin-packaging.md`. The primitive mapping in the Decision section below is unchanged and remains the load-bearing argument; only the framework and the packaging changed. The text is kept as decision history.
 
 ## Context
 
