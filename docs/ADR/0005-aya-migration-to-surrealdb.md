@@ -1,7 +1,9 @@
 # ADR-0005: Migrate AYA from Convex to SurrealDB
 
-**Status:** Accepted, phased
+**Status:** Accepted — completed on the AYA side (2026-08-24 note)
 **Date:** 2026-04-29
+
+> **Completed, but not as phased.** AYA did not migrate through Phases 1–4; it *flipped*: the Convex backend was deleted and SurrealDB + Logto became the only target stack (AYA ADR-0006, `AGENTS.md`: "flip, not migration — no compatibility adapters, dual writes, legacy modes, or backfills"). The "SurrealDB Memory backend in agent-core" of Phase 1 never existed because agent-core was retired (ADR-0019). The Phase 4 "Cloudflare Workers proxying live queries" was replaced by direct browser live queries (ADR-0020). The outcome this ADR wanted — one database, AYA and Limpide on the same SurrealDB — is achieved. Limpide's data now lives in plugin-private tables inside the host's Surreal, not in "its own SurrealDB instance". The text below is kept as decision history.
 
 ## Context
 
