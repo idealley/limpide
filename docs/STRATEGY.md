@@ -1,65 +1,57 @@
 # Strategy
 
-This document covers the commercial shape of Limpide: who pays, for what, and why the thing they pay for is defensible. It was extracted from `VISION.md` so that the vision can stay purely about the student. The vision is the *why*; this is the *how it sustains itself*. Nothing here is allowed to override a Foundation rule — where commercial incentive and pedagogy conflict, pedagogy wins, because the pedagogy is the product and a Limpide that compromises it has nothing left to sell.
+Limpide's immediate commercial task is to establish that a bounded tutoring experience helps learners, earns repeat use, and attracts a payer at a sustainable delivery cost. [ADR-0021](ADR/0021-validate-tutoring-first.md) replaces the earlier commitment to a three-scale business with a sequence of hypotheses to validate. The network remains a future business goal without a promised launch date.
 
-The argument rests on a claim made precise in `MEASUREMENT.md`: understanding is measurable through process, and the process signals Limpide produces as a byproduct of tutoring *are* the thing institutions cannot buy anywhere else. The business model is the measurement thesis pointed at a buyer.
+The pedagogy serves the learner. Its methods and measurements must be tested; learner agency, honest feedback, privacy, and safeguarding remain commitments. A compelling philosophy is a reason to run a pilot, not evidence of efficacy or demand.
 
-## Three scales, one product
+## The first offer
 
-Limpide is not three products. It is one product seen at three magnifications, governed at every level by the same principle: *understanding emerges from articulation, and articulation is what we make possible.* The scales are individual, institutional, and network. They correspond exactly to the four data scopes in `ARCHITECTURE.md` (personal, cohort, institutional, network) — the commercial structure and the data structure are the same structure, which is what keeps the privacy promises credible.
+A curriculum-based placement session followed by a daily mathematics exercise is a proposed entry product (`BOOTSTRAP-PILOT.md`). Import the official curriculum first; use school year/program, optional photos of recent assignments, and targeted questions to locate the learner, then generate checked exercises and explanations for that context. It offers a small recurring benefit: a problem chosen for the learner, help with the difficulty underneath it, and later opportunities to check whether the idea has stuck. Repeated observations can improve the learner model and reveal weaknesses in the exercise bank.
 
-**Individual scale.** The student explains what they think they know; the explaining produces understanding that survives forgetting. This is the entire subject of `VISION.md` and `PEDAGOGY.md`. Commercially it is the consumer product: a student, a parent, or a self-directed learner pays for the patient interlocutor at scale. The institutional scope collapses into the personal scope here — the user is their own institution — and no data leaves the user's control.
+The founder has teacher contacts. A small supervised mathematics cohort aligned to one Vaud curriculum cluster is the recommended first route. Teacher participation, learner ages, recruitment, and the exact payer remain to be confirmed. Daily cadence, placement length, and exercise format are hypotheses.
 
-**Institutional scale.** The same mechanism produces something institutions cannot produce by any other means: structured, longitudinal evidence of how understanding actually develops in the people who learn there. A school can finally show, in students' own articulations, what its pedagogy produces over four years. A company can finally see how its people actually reason, in the patterns of how they explain their work. This is the evidence schools currently commission expensive longitudinal studies to approximate — and Limpide produces it as exhaust from doing what students already need. The institution owns this data; Aegilo cannot read it without an explicit grant.
+The payer could be a parent, tutoring provider, or school. Choose one for the pilot offer and test a concrete price. A free introduction can help recruitment; actual paid continuation is stronger evidence than interest. Track inference cost, educator review, and support time alongside learner outcomes.
 
-**Network scale.** Institutions that opt in contribute anonymized aggregations and receive comparative benchmarks in return: "students at your school make X cross-substrate connections per quarter; the network median is Y." The same architecture serves Aegilo's geopolitical intelligence plugin — companies opt into sector risk benchmarks while keeping proprietary data sovereign. The network grows in value as adoption grows; the contribution costs nothing in privacy because the aggregation architecture prevents extraction, even by the contributor.
+## What an institution might buy
 
-## What the institution is actually buying
+The first institutional hypothesis is useful formative information that helps teaching. For example, a cohort's equation errors may suggest revisiting the meaning of equality, accompanied by reviewed examples for the next lesson. Test whether educators can act on this and whether the buyer values that action enough to pay.
 
-The institutional sale is the load-bearing one — it is where recurring revenue at scale lives — so it is worth being precise about what is on offer. It is not "a tutoring app for our students." It is **evidence of efficacy that the institution cannot generate any other way.**
+Longitudinal understanding records may eventually support an efficacy-reporting product. They do not establish efficacy merely by existing. Transcript scores depend on task difficulty, support, expression, and the evaluator. Independent delayed assessments and an appropriate comparison are needed before causal claims about Limpide or an institution (`MEASUREMENT.md`). Demand for reporting must be established separately from scientific validity.
 
-Every other tool a school can buy reports state metrics: completion, scores, time-on-task. These answer "did the students perform" and not "did the students understand," and administrators have learned, often expensively, that the two diverge. What Limpide reports is the process record described in `MEASUREMENT.md`: how iteration deltas trend across a cohort, how recovery-under-probing rates change over a semester, how self-noticing latency falls as a class matures, how often students transfer a capability across substrates without being led. This is a picture of *thinking-as-it-develops*, longitudinally, in the students' own words.
+Tutoring and reporting can share software, but learners, teachers, and procurement buyers have different needs. Corporate training is a further market hypothesis, not assumed to be the same sale as school mathematics.
 
-The buyer is a head of school, a director of learning, a chief people officer — someone accountable for an outcome that has always been asserted rather than shown. Limpide lets them show it. That is the value, and it is durable because it is a byproduct: the institution does not have to run a study, incentivize participation, or trust a self-report, because the data is generated by students doing the work they came to do.
+## Potential differentiation
 
-## Why it is defensible
+Socratic questioning already features in products such as [Khanmigo](https://www.khanmigo.ai/) (checked 2026-09-10). Pedagogical restraint, process logging, and sovereign storage are valuable design choices; they are not proven moats.
 
-Three structural facts make the position hard to copy, in increasing order of durability.
+Candidate advantages to earn are excellent French-language tutoring for a local curriculum, accurate memory of prerequisite gaps, educator-reviewed diagnostic material, trusted teacher relationships and distribution, and independent evidence of benefit coupled with useful teaching feedback.
 
-**The pedagogy is the moat at the individual scale.** A competitor can build a chatbot that answers homework. Building one that *refuses to answer when struggling is the right state*, and is good enough at the surface work to earn the trust required to do the depth work, is a much harder thing — and the Foundation rules are the specification of that hard thing. The hardest part to copy is the discipline to not do the easy, engagement-maximizing thing.
+The mathematics–reading–rhetoric ambition remains a longer-term educational direction. Mathematics is the proposed first subject, physics a possible adjacent expansion, and philosophy a separate reading-and-argument experiment. Each needs expertise, assessment, and demand validation.
 
-**The measurement is the moat at the institutional scale.** Process evidence is only available to a system that runs the process. A state-metric competitor cannot retrofit it, because the data was never captured — they have completion logs, not explanation trajectories. The institutional product is unavailable to anyone who did not build the pedagogy first. This is why the order matters: the individual pedagogy is the precondition for the institutional evidence, which is the precondition for the network.
+## Network: a future business goal
 
-**The data sovereignty architecture is the moat at the network scale.** The federated-with-consent design (`ARCHITECTURE.md`) — sovereign storage by default, aggregation at the source, value flowing back only to contributors — is the most defensible long-term position because it is the only architecture under which a privacy-sensitive institution (a school, a defense contractor, a hospital) can contribute to a network at all. The incentive design is self-reinforcing: contributing makes the network more valuable, and the network's value is structurally returned to contributors, so the network compounds while the privacy guarantee holds.
+Cross-institution benchmarks remain an option for later. They are outside the pilot, initial sales promise, revenue model, and required implementation. There is no year-2-to-3 launch commitment.
 
-## Pricing posture
+Revisit only after a useful paid institutional product exists, enough eligible institutions want to participate, measures are independently validated and comparable, and privacy and governance arrangements are credible. Participation requires explicit authorization and a separate review of permitted data; existing child-data restrictions remain in force. More learners alone do not make comparisons valid.
 
-Detailed pricing is open work; the *shape* is settled by the incentive design.
+Network participation is not bundled into the initial tier. Contribution discounts, contributor-only benefits, and isolation premiums are deferred ideas. A school does not have to contribute data to buy the initial product. Preserve existing data boundaries where inexpensive; a complete future aggregation design must not delay the first tutoring test.
 
-The standard institutional tier includes network participation — contributing aggregates is the default, because the network's value depends on contribution, and the privacy architecture makes contribution safe. An opt-out tier exists for institutions that cannot share aggregated data under any terms (defense, certain healthcare and finance contexts); they pay a premium for the additional isolation, since they consume the platform without strengthening the network. The individual consumer tier is priced as a standalone product and does not feed the network at all (the personal scope never leaves the user).
+## Safeguarding and acceptable use
 
-The principle behind the structure: the people who make the network more valuable should pay less, not more, and the people who extract isolation from it should pay for that isolation. This aligns the price with the thing the platform is trying to grow.
+Existing child-data and safeguarding work remains a precondition for a child-facing pilot (`ADR/0014-safeguarding-and-child-data.md`, `PILOT-READINESS.md`). Daily exercises and teacher introductions do not remove those prerequisites or authorize reuse of learner records.
 
-## Safeguarding and child-data compliance as a sales precondition
+Institutional views remain formative under ADR-0015. They are not for punitive student ranking or teacher evaluation. Pilot assessment access must be explicitly scoped; teacher collaboration does not imply routine access to private transcripts. Pricing and product incentives should support this discipline.
 
-No school deploys a child-facing product without satisfying itself on two fronts: the safety of children during use, and the lawful handling of their data. Limpide treats both as preconditions of the institutional sale, not afterthoughts — and the design choices that satisfy them double as differentiators. The best-interests / Age Appropriate Design Code baseline, the per-deployment controller model that fits FERPA's school-official exception, the exclusion of children's data from the network scope, and the F12 safeguarding gate (`docs/ADR/0014-safeguarding-and-child-data.md`) are the same commitments that make the sovereignty story credible. The institutional buyer is buying, in part, the confidence that this has been done properly — which is why the safeguarding and child-privacy work is sequenced before the pilot, not after.
+## Risks and the next decision
 
-## Acceptable use: formative, never punitive
+The central risks are whether questioning feels helpful, progress survives without the tutor, teachers gain actionable information, someone pays, and delivery costs fit the price. Internal confidence increases, completion rates, and enthusiastic feedback cannot answer all five.
 
-The institutional evidence is licensed for *formative* use — helping students, improving teaching, demonstrating efficacy — and contractually forbidden for *summative-punitive* use: ranking or grading students on the process signals, or evaluating and disciplining teachers on their cohorts' patterns (`docs/ADR/0015-acceptable-use.md`). This is not only an ethical line; it protects the asset. Punitive use triggers the same gaming that keeps the signals invisible to students (Foundation rule F8) — students perform, teachers teach to the metric, and the evidence stops being true. An institution that weaponises the data destroys the thing it is paying for. The commitment is enforced three ways: by the licence, by formative cohort-level views built by design (no student-ranking or teacher-evaluation surface exists), and by extending the invisibility discipline to the institutional layer.
+Use a bounded pilot to decide whether to improve the offer, expand the cohort, or stop. Small pilots supply directional evidence; broader efficacy claims need stronger evaluation. Ownership, governance, and licensing remain open, with timing driven by actual deployment needs.
 
-## The honest commercial risks
+## Status
 
-**The unmeasurability liability is real even after the reframe.** `MEASUREMENT.md` establishes that understanding is measurable through process — but process evidence is harder to put on a procurement slide than a completion percentage. The institutional sale requires teaching the buyer to want a better metric than the one their incumbent tools trained them to ask for. That is a longer sale and a market-education cost, not a plug-and-play replacement.
+**Settled.** Tutoring and buyer validation first; independent evidence for efficacy claims; formative use; safeguarding and data discipline; network business and pricing deferred under ADR-0021.
 
-**The depth path is the differentiator and the slowest to materialize.** The network benchmarks that make the strongest institutional pitch (cross-substrate connection rates, transfer frequency) come from the depth path, which most students reach slowly if at all. Early institutional deployments will have thin depth-path data and will have to be sold on the surface evidence plus the promise of the depth evidence accruing. Underpromising here is the discipline.
+**Tentative.** Daily mathematics, teacher-assisted recruitment, candidate advantages, actionable institutional reporting, and later subject experiments.
 
-**Network effects are a year-2-to-3 phenomenon.** Per the phasing in `ARCHITECTURE.md`, the network scope does not exist at MVP. The schema is built to support it from day one, but the benchmarks — the strongest part of this document's pitch — are not available until there are enough institutional deployments to make them meaningful. The strategy must not sell network value before it exists.
-
-## Status of this document
-
-**Settled.** The three-scale model as one product at three magnifications, mapped to the four data scopes. The institutional product being process-evidence of efficacy, not a tutoring app. The three moats (pedagogy, measurement, sovereignty) and their ordering. The pricing *shape*: standard tier includes network participation, isolation costs a premium, consumer tier never feeds the network. Safeguarding and child-data compliance as preconditions of the sale (`docs/ADR/0014-safeguarding-and-child-data.md`), and the formative-not-punitive acceptable-use commitment (`docs/ADR/0015-acceptable-use.md`).
-
-**Tentative.** Actual price points at every tier. The specific shape of network-scale benchmarks — which patterns are surfaced, what comparative data is most valuable to which buyer — designed when there are enough deployments to make it concrete rather than speculative. The sequencing of consumer-first versus institution-first go-to-market.
-
-**Open.** Whether Limpide is eventually owned by a mission-locked company, a foundation, or a steward-ownership structure (see `docs/ADR/0006-licensing.md` when written). The contractual structure that codifies "Aegilo never sells the network's data" — corporate articles, customer contracts, third-party attestation, or all three — which becomes urgent before the first institutional deployment, not before. Whether the consumer and institutional motions can share a single sales and support organization or must be run separately.
+**Open.** Confirmed teacher/cohort arrangements, payer and price, unit economics, efficacy evidence, procurement needs, and whether a future network justifies its costs.
