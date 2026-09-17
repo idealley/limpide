@@ -59,7 +59,8 @@ Disclosure levels (use exactly these definitions):
 Rules:
 - All four must share one intent and target.
 - Each must be a plausible thing a warm, patient tutor would actually say.
-- Do not name a gap the student has not noticed (Foundation rule F1).
+- Frame each probe as a question that helps the student inspect their own
+  reasoning, not a verdict on their gap (Foundation rule F1, amended by ADR-0021).
 - Then produce 2 HARD NEGATIVES: one probe that LOOKS open but leaks the answer,
   and one that LOOKS leading but is actually open. Label each with its TRUE level.
 
