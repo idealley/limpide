@@ -26,6 +26,7 @@ Each ADR captures one decision. The format is: context, decision, alternatives c
 | [0018](0018-confidence-model.md) | The confidence model | Proposed |
 | [0019](0019-flue-execution-engine-and-plugin-packaging.md) | Run on Flue inside the AYA envelope; ship Limpide as an AYA plugin | Accepted |
 | [0020](0020-edge-layer-follows-aya.md) | The edge layer follows AYA — Surreal live queries, worker BFF, host clock | Accepted |
+| [0021](0021-validate-tutoring-first.md) | Validate tutoring first; defer the network business | Accepted |
 
 Cross-references to AYA's own ADRs (`aya/docs/ADR/`) are written as "AYA ADR-NNNN" to keep the two numbering sequences apart. The ones Limpide leans on: AYA ADR-0006 (SurrealDB flip), 0008 (Logto), 0014 (Flue as execution engine), 0017 (trusted plugin packages), 0018 (scheduled Playbook clock).
 
