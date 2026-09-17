@@ -68,3 +68,11 @@ Versioning already supports this: the Playbook is versioned and encounters log w
 **Tentative.** The contents of the regression suite. The replay metric weighting. The simulated-student construction. The roll-out/roll-back thresholds.
 
 **Open.** Simulated-student fidelity validation. Drift-vs-improvement disambiguation. The ethical holdout design. The adoption bar for layer-2 evidence.
+
+## Amendment — 2026-09-10
+
+[ADR-0021](0021-validate-tutoring-first.md) takes precedence over conflicting commitments above; the original text is retained as decision history.
+
+- **Process signals are candidates, not the outcome metric.** Layers 2 and 4 still read them, but a claimed improvement must also hold up on independent outcomes: delayed unaided explanation and unfamiliar application, assessed with a fixed educator-reviewed rubric and kept out of tutoring and generation prompts. Model-generated trajectories and simulated students alone do not establish efficacy.
+- **More *discovered* is not by itself better.** Under amended F2 the teaching route does not rank outcomes, so replay compares support-attributed independent demonstration rather than the discovered/delivered mix. Selecting prompts or versions on process signals is itself an optimisation pathway and needs the same independent check.
+- **Regression must permit explicit teaching.** Under amended F1, Foundation scenarios include cases where unproductive probing should end in a timely explanation or correction, and check that the resulting responses are recorded as supported rather than independent.

@@ -77,3 +77,11 @@ Program-governed depth is enforced at step 3 as a terminating floor on the why-r
 **Tentative.** The disclosure enum values (`open | hint | leading | near_answer`). The classifier's model and whether it is prompted, fine-tuned, or partially deterministic. The blast-radius thresholds that separate auto-applicable parameter nudges from human-review rule changes. The representation of program-required depth.
 
 **Open.** The attribution function and its external validation. Classifier calibration methodology. Whether the gate's own evolution log needs to be surfaced to institutions as part of the efficacy evidence (it is, after all, a record of how the system's pedagogy changed over time).
+
+## Amendment — 2026-09-10
+
+[ADR-0021](0021-validate-tutoring-first.md) takes precedence over conflicting commitments above; the original text is retained as decision history.
+
+- **Measurement premise.** The context's claim that understanding is measurable only through process is superseded: `MEASUREMENT.md` pairs process evidence with delayed independent outcomes, and institutional efficacy reporting is a possible later offering once validity and demand are established.
+- **F1 as a gate input (step 3).** The not-yet-noticed-gap rule is replaced by amended F1: prefer probes that let the student notice, with timely explanation or correction when probing is unproductive or help is requested. How the gate encodes this less mechanical rule is open.
+- **Attribution.** Probe records and disclosure labels help separate independent reconstruction from repetition after a hint; they do not solve attribution by definition. External validation against delayed unaided work, listed as open above, is required before attribution-based claims.

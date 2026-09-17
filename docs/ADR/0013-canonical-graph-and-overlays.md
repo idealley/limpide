@@ -62,3 +62,14 @@ The consequence that makes this non-negotiable: **timing and required depth live
 **Tentative.** The timing representation. The import mechanics for cantonal curricula. The pilot scope (canton + subject).
 
 **Open.** Cross-overlay timing-conflict resolution. Governance of the shared canonical graph across contributing institutions.
+
+## Clarification — 2026-09-10
+
+[ADR-0021](0021-validate-tutoring-first.md) narrows the first experiment and confirms the sourcing model above; the canonical-graph and overlay design is unchanged.
+
+- **Official material seeds the graph.** The selected official curriculum (for Vaud, the PER and applicable cantonal material) supplies the initial structure and overlay before learner data is collected. Extraction and LLM-assisted decomposition draft concepts and prerequisites; teachers validate the imported and inferred structure rather than authoring it from scratch.
+- **Import coverage can exceed validated tutoring coverage.** The imported overlay may span a whole subject/year band while the first trial serves one reviewed concept cluster.
+- **Learner data refines the graph; it does not define it.** Placement and practice refine individual learner estimates and suggest reviewed curriculum changes; response correlations do not establish prerequisite edges.
+- **Multi-overlay benchmarking is not a pilot prerequisite.** A second overlay and cross-institution benchmarks wait for the conditions in ADR-0021.
+
+The placement and exercise-generation workflow is in `../BOOTSTRAP-PILOT.md`.

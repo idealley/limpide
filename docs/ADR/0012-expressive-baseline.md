@@ -67,3 +67,9 @@ This is added as **Foundation rule F11** (`PEDAGOGY.md`): *judge understanding r
 **Tentative.** The representation of `expressiveBaseline` (scalar vs. per-substrate), its initialization, and its update rule. Whether F11 needs a distinct Policy-Gate encoding or rides on the existing teach-back evaluation gate.
 
 **Open.** Bias validation of the baseline (it is an estimate that could systematically mis-set expectations for some groups). Per-substrate baselines. Baseline visibility to the student.
+
+## Amendment — 2026-09-10
+
+[ADR-0021](0021-validate-tutoring-first.md) and the revised `MEASUREMENT.md` take precedence over conflicting commitments above; the original text is retained as decision history.
+
+The expressive baseline is a proposed mitigation of the articulation confound, not a demonstrated resolution. Recovery under probing is candidate evidence of grasp, to be validated against independent outcomes; probing can itself impose language demands. Accept alternative representations such as calculations and diagrams, use educator review, and retain uncertainty when evidence is insufficient. The three orthogonal axes, F11, and the rule that the baseline never caps depth are unchanged.

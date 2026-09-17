@@ -71,3 +71,13 @@ The motivating failure of the scalar: a child who is sure "something attracts th
 **Tentative.** The statistical form, the per-outcome decay constants, and the per-rung-to-concept aggregation for display. The first-cut delta table in `ARCHITECTURE.md` is retained as the starting magnitudes, now interpreted per rung.
 
 **Open.** Whether credibility decays with evidence age. Cross-student normalisation under baseline-relative confidence.
+
+## Amendment — 2026-09-10
+
+[ADR-0021](0021-validate-tutoring-first.md) takes precedence over conflicting commitments above; the original text is retained as decision history.
+
+- **Unchanged.** Per-rung confidence derived from encounter history, with observation-weighted credibility; F10; kept off the optimisation loop; prerequisite readiness as a separate gate.
+- **Update weights are provisional (decision 4).** Amended F2 distinguishes independent demonstration from repetition of supplied content; it does not give discovery an intrinsic bonus, and a learner can demonstrate understanding after direct explanation. The exam-mode 0.7 multiplier and the discovered-over-delivered weighting are hypotheses to compare against alternatives, including no mode discount.
+- **Differential decay is a hypothesis (decision 5).** The rejection of uniform decay is withdrawn: equal decay is a legitimate comparison, and any durability difference must be estimated from delayed independent evidence rather than written into the formula.
+- **Baseline-relative classification needs validation.** See the ADR-0012 amendment.
+- **Confidence is not a calibrated probability or efficacy statistic** until validated; it serves tentative selection and formative reporting.
