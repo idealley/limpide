@@ -2,17 +2,17 @@
 
 > **Understanding is what survives explaining it.**
 
-A tutoring platform built on the principle that understanding is *discovered*, not delivered — and that *understanding* is a different thing than *learning*. Learning is information transferred. Understanding is information that has become part of how the student thinks. Limpide exists to produce the second.
+A tutoring platform for understanding that students can explain, apply, and revisit independently. Limpide combines guided discovery, useful explanation, and practice, with a patient memory of the foundations each learner is still building.
 
 ## Status
 
-Early design. No code yet. This repository currently holds the design documents that will guide implementation.
+Early design. No code yet. This repository currently holds the design documents that will guide implementation. The current direction is to validate a focused tutoring offer and buyer demand first; the network is a future business goal ([ADR-0021](docs/ADR/0021-validate-tutoring-first.md)). A placement session plus daily mathematics practice is a [proposed bootstrap pilot](docs/BOOTSTRAP-PILOT.md).
 
 ## What this is
 
 Limpide is a plugin on the AYA host, running on Flue as the execution engine (ADR-0019). It is a tutor that asks the student to explain what they think they know, surfaces gaps through Socratic probing, and makes the student feel the difference between thinking they understand and actually understanding. It honors urgent needs (the test on Friday) while patiently building the deeper capability behind them.
 
-The verb that matters is **understand**, not learn. Limpide does not aim to transfer information efficiently — that's what books and search engines are for. Limpide aims to produce the kind of understanding that survives the student's attempt to explain it, that can be rebuilt from first principles, that changes how the student reads the next thing they encounter.
+The aim is **understanding**: ideas the student can reconstruct, connect, and use beyond the current exercise. Explanation trajectories help reveal this; delayed independent tasks help test whether it lasts. Teaching methods and confidence estimates remain hypotheses to validate, while learner dignity and agency are commitments.
 
 The platform's name comes from the French *limpide* (clear, transparent, untroubled). The name describes what the student becomes during a good session — not what the system is or does.
 
@@ -34,9 +34,10 @@ The full architecture is in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 |---|---|---|
 | [`docs/VISION.md`](docs/VISION.md) | The educational thesis. Why this platform exists, what it's pushing against, what success looks like. | You're trying to remember why a particular rule is non-negotiable, or you're explaining the project to someone who needs the *why* before the *how*. |
 | [`docs/PEDAGOGY.md`](docs/PEDAGOGY.md) | What the system does, in pedagogical terms. The session loop, the recursive fork mechanism, the pinned-gap agenda, the cross-substrate triad work, the urgency modes. | You're designing a new feature and need to check whether it serves the pedagogy. You're writing a system prompt for Tutor or Gardner and need to know what behaviors to encode. |
-| [`docs/MEASUREMENT.md`](docs/MEASUREMENT.md) | How the system knows it's working. Why understanding is measurable only through process, the four teach-back signals, and the Goodhart discipline that keeps them honest. | You're deciding what to instrument, what counts as a confidence increase, or how to report efficacy without reintroducing the metrics that destroy understanding. |
+| [`docs/MEASUREMENT.md`](docs/MEASUREMENT.md) | How the system knows it's working. Candidate teach-back signals, independent delayed assessments, attribution, and the discipline needed to validate confidence estimates. | You're deciding what to instrument, what counts as a confidence increase, or what evidence is needed before reporting efficacy. |
 | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | How the system is built. The plugin on the AYA host, the two-Flue-sessions-on-one-Task execution shape, plugin-private SurrealDB schema, data model in TypeScript interfaces, Policy Gate evaluators, data scopes, deployment topologies. | You're writing code, reviewing a PR, or making a technical decision that touches multiple components. |
-| [`docs/STRATEGY.md`](docs/STRATEGY.md) | The commercial shape. The three-scale model (individual, institutional, network), what institutions actually buy, the three moats, and pricing posture. | You're explaining how Limpide sustains itself, sizing a deployment, or making a decision where commercial incentive meets pedagogy. |
+| [`docs/STRATEGY.md`](docs/STRATEGY.md) | The commercial hypotheses: first payer, useful institutional feedback, potential differentiation, and the network as a deferred business goal. | You're explaining how Limpide sustains itself, sizing a deployment, or making a decision where commercial incentive meets pedagogy. |
+| [`docs/BOOTSTRAP-PILOT.md`](docs/BOOTSTRAP-PILOT.md) | Proposed placement and daily-practice offer, graph/data boundaries, independent assessment, and subject sequencing. | You are discussing the first learner offer or preparing teacher conversations. |
 | [`docs/ADR/`](docs/ADR/) | Architecture Decision Records. Each ADR captures one decision, the alternatives considered, and the reasoning. | You're considering changing something. Find the ADR that established it, understand why, then decide whether the reasoning still holds. |
 
 ## Reading order, by purpose
@@ -57,7 +58,7 @@ Limpide's documents were written in April 2026 against a planned substrate (agen
 
 ## License
 
-Not yet decided. See [`docs/ADR/0006-licensing.md`](docs/ADR/0006-licensing.md) (when written) for the open question.
+Not yet decided. Licensing ADR-0006 remains an open placeholder in the [ADR index](docs/ADR/README.md).
 
 ## Related repositories
 

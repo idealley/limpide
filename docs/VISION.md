@@ -18,9 +18,9 @@ Limpide is built to train all three as a single integrated capability.
 
 Most ed-tech, even when started with the right intentions, ends up optimizing for engagement metrics that quietly destroy what they claim to measure. The pattern is recognizable: students complete more lessons, "master" more concepts, score higher on adaptive tests — and emerge unable to explain what they learned, unable to argue, unable to read anything that wasn't designed for them.
 
-The structural failure is in the loop. When a system rewards *delivered* understanding the same as *discovered* understanding, the system optimizes for delivery, because delivery is faster. The student receives an explanation, says they understand, the confidence score goes up, the next concept loads. Nothing was learned. The metric was satisfied.
+The failure we want to avoid is in the loop: treating receipt of an explanation as equivalent to independently demonstrating understanding. The student receives an explanation, says they understand, the confidence score goes up, the next concept loads. The metric was satisfied without establishing that the student can reason independently.
 
-The failure mode has a name: the Klarna Customer Service problem. An AI agent resolved tickets faster than any human team while quietly destroying customer relationships, because tickets-resolved was measurable and relationship-quality was not. Education has the same shape. Performance is captured cleanly by a *state* metric — a score, a completion, a confidence number. Understanding is not; it shows up only in the *process* of a student explaining themselves and either rebuilding through a gap or collapsing at it. A system that watches only the state cannot tell the two apart, so it optimizes for performance and calls it understanding. The early framing of this — "understanding is unmeasurable" — was imprecise and worth correcting: understanding is measurable, but only through process, and process measurement carries its own discipline. That is the subject of `MEASUREMENT.md`.
+The failure mode has a name: the Klarna Customer Service problem. An AI agent resolved tickets faster than any human team while quietly destroying customer relationships, because tickets-resolved was measurable and relationship-quality was not. Education has the same shape. Performance is captured cleanly by a *state* metric — a score, a completion, a confidence number. Understanding needs richer evidence, including the process of explaining and the ability to apply an idea independently later. A system relying on a completion or self-report can confuse assisted performance with understanding. The early framing of this — "understanding is unmeasurable" — was imprecise and worth correcting: process evidence can reveal understanding, and it needs validation against independent outcomes. That is the subject of `MEASUREMENT.md`.
 
 Limpide is structurally committed to the difference.
 
@@ -28,25 +28,15 @@ Limpide is structurally committed to the difference.
 
 > Understanding is what survives the student's attempt to explain it.
 
-This is the platform's first commitment, the one from which everything else follows. A student does not learn by being told. A student learns by being asked to teach what they think they know, hitting the wall in their own explanation, recognizing the wall, and choosing what to do about it.
+This is a guiding principle: invite students to explain what they think they know, notice where their reasoning breaks, and rebuild with appropriate support. A patient interlocutor can make confusion safe to express and remember unfinished work across sessions.
 
-The Tutor's job is not to explain. The Tutor's job is to ask the student to explain, to listen carefully, and to ask the next question. The student does the work of noticing their own confusion. The system holds the structure that makes noticing possible.
+The Tutor listens, questions, demonstrates, explains, and corrects according to what helps the learner. Active thinking matters, but it can follow explicit instruction as well as discovery. Helping a student notice is a preferred move, not a requirement to withhold useful help until they rediscover everything themselves (ADR-0021).
 
-This is sometimes called Socratic, sometimes called Feynman-style, sometimes called maieutic. The names matter less than the substance: *the student must do the active work, or no understanding happens*.
+## Learning and understanding
 
-## Learning versus understanding
+Limpide emphasizes durable conceptual understanding: ideas the learner can explain, apply in unfamiliar situations, and connect to other ideas. The distinction from merely completing a task or recalling a phrase expresses the ambition. Learning is broader than passive information transfer, and receiving an explanation can contribute to understanding.
 
-The conventional verb for what tutoring platforms do is *learn*. Limpide rejects this verb as the framing of its own work, and the rejection is structural rather than rhetorical.
-
-*Learning* in the conventional sense is information transferred, retained, retrievable on a test. The student is the receptacle; the curriculum is the content; success is measured by how much of the content the receptacle holds. This is what most ed-tech optimizes for, because it's what's measurable, and it's what produces students who pass tests and forget the material the following week.
-
-*Understanding* is different. Understanding is information that has become structurally part of how the student thinks. It can be rebuilt from first principles. It connects to other understandings. It changes how the student reads the next thing they encounter. A student who has *understood* something cannot un-understand it without effort, in the way that a student who has *learned* something can passively forget it.
-
-The French distinction between *apprendre* and *comprendre* tracks this difference. The English language has lost the distinction, which is part of why the conventional verb causes confusion. Limpide is in the *comprendre* business — *understanding* in English, with full awareness that the English word is the closest available approximation rather than a perfect translation.
-
-The Greek tradition called this kind of knowledge *gnosis* — knowledge by acquaintance, knowledge that has become part of the knower, distinct from *episteme* (theoretical knowledge) and *techne* (practical skill). Limpide aims at *gnosis*. The student doesn't end a session having learned about springs; they end having understood springs in a way that is now structurally part of how they think about force and displacement.
-
-This distinction is not pedagogical pedantry. It determines what the system optimizes for at every level: which verbs the Tutor uses, which signals Gardner attends to, what counts as a confidence increase, what the Foundation rules protect against. A platform that confuses learning with understanding will optimize for the side of the distinction a state metric can see and quietly destroy the side that lives only in process. Limpide is structurally committed to the harder verb, and to measuring it the harder way (`MEASUREMENT.md`).
+Whether a particular teaching method produces stronger retention or transfer is an empirical question. Understanding can weaken over time. The system must test its assumptions against delayed, independent demonstrations rather than encode the desired durability into its scores and report that as evidence. Process records and independent outcomes complement one another (`MEASUREMENT.md`).
 
 ## The cross-substrate vision
 
@@ -60,7 +50,7 @@ This is the depth path. Most students will not start here. They will arrive with
 
 ## The two paths and their relationship
 
-**The urgent-need path** is the entry point for almost every student. They come because they don't understand springs, or they have a probability problem due tomorrow, or their teacher said something about derivatives that didn't make sense. Limpide honors the urgency. It asks the student to teach what they already know about the topic. The teaching attempt exposes the local gap and often a deeper gap underneath. Limpide offers to fork — would you like to spend ten minutes on the deeper thing first, or get the local answer and come back? The student chooses. Whichever they choose, the system delivers what they need by Friday.
+**The urgent-need path** is the entry point for almost every student. They come because they don't understand springs, or they have a probability problem due tomorrow, or their teacher said something about derivatives that didn't make sense. Limpide honors the urgency. It asks the student to teach what they already know about the topic. The teaching attempt exposes the local gap and often a deeper gap underneath. Limpide offers to fork — would you like to spend ten minutes on the deeper thing first, or get the local answer and come back? The student chooses. Whichever they choose, the system works toward the immediate need while recording what remains uncertain.
 
 **The depth path** is the cross-substrate triad work, where the student is in exploratory mode and has the time to make connections explicit. This is the path that produces thinkers. It is the path that earns the platform its reason for existing. But it is reached only by students who first found the platform useful at the surface, trusted it, and came back when the urgency had passed.
 
@@ -78,13 +68,13 @@ A student who has used Limpide for a year, working through urgent needs and occa
 
 These are not curriculum outcomes. They are person-shaped outcomes. The curriculum is the means; the person is the end.
 
-## Three scales, one principle
+## Commercial horizons
 
-Limpide serves the individual student. It also serves institutions — schools that deploy it for their students, organizations that deploy it for their people — and eventually a network of institutions that share anonymized patterns to learn from each other. These three scales — individual, institutional, network — are not separate products. They are the same product seen at three magnifications, governed by the same principle: *understanding emerges from articulation, and articulation is what we make possible.*
+The individual learner is the immediate focus. Useful formative information for teachers is an institutional hypothesis to validate alongside tutoring. Cross-institution benchmarks remain a future business goal, with no committed launch year or contribution-based pricing (ADR-0021).
 
-The vision's claim is only that these scales exist and share one principle. The same Foundation rules — discovered beats delivered, the student does the noticing, gaps stay internal, never deceptive — apply at every scale; F1 protects the individual student during a session, and the four-scope data architecture (`docs/ARCHITECTURE.md`) protects the individual within their institution and the institution within the network. The rest of this document stays at the individual scale, because that is where the educational thesis lives.
+These possible scales share an educational ambition but have different users, buyers, evidence requirements, and operating costs. The first product must earn repeat use and payment through learner and teacher value. The network is not required to justify or implement the pilot. `STRATEGY.md` records the sequencing and conditions for reconsidering it.
 
-The commercial shape of the three scales — who pays, for what, why it is defensible, how the institutional product is the measurement record of `MEASUREMENT.md` sold to a buyer — has been moved to `STRATEGY.md` so the vision can remain about the student. What matters here is only that the three-scale model is what gives Limpide a coherent path from a tutoring tool to infrastructure for thinking-as-it-actually-develops, in people and in the institutions that house them.
+Existing privacy and safeguarding boundaries apply at every stage. Preserving those boundaries does not require implementing future network features before the first useful tutoring experience.
 
 ## The honest limits
 
@@ -92,12 +82,12 @@ Limpide does not replace teachers. A skilled human teacher who can sit with a st
 
 Limpide also does not replace reading. Sitting with a primary text — Plato, Euclid, a real piece of literature — and working through it slowly is the activity. Limpide can help the student read more carefully, can ask the questions that make the reading active, can connect the text to other texts and to other substrates. It cannot read for the student.
 
-Finally, Limpide does not protect students from frustration. The pedagogical commitment is that productive failure precedes understanding. A platform that smooths every difficulty is a platform that prevents learning. The Tutor's restraint — its refusal to give the answer when struggling is the right state — is not a bug to be fixed. It is the work.
+Finally, some difficulty can be productive, but frustration is not the objective. The Tutor must distinguish useful effort from unproductive struggle and offer timely explanation or correction. Whether students feel helped rather than interrogated is a central pilot question.
 
 ## Status of this document
 
-**Settled.** The principles in this document are the foundation everything else is built on. Reopening any of them requires a new ADR with serious justification. The existence of the three-scale model (individual, institutional, network) is part of the settled vision and the architecture supports it; its commercial development lives in `STRATEGY.md`. The reframed measurement claim — understanding is measurable only through process, not by state metrics — is settled here and developed in `MEASUREMENT.md`.
+**Settled.** The aim of durable understanding, learner dignity and agency, patient support, honest feedback, and the broader reasoning–reading–expression ambition. ADR-0021 establishes tutoring and buyer validation first and defers the network business.
 
-**Tentative.** The specific list of capabilities trained by the cross-substrate triads, beyond the first one (constructive reasoning from premises) is a working hypothesis. The first triad is concrete; the next ten will need to be designed and tested as the platform matures.
+**Tentative.** Which teaching moves work for which learners, how much transfer occurs across subjects, and whether the proposed triads produce the intended capabilities. These are testable hypotheses, not settled effects. Process measurement requires independent validation.
 
-**Open.** Whether Limpide is eventually owned by a mission-locked company, a foundation, or a steward-ownership structure. The decision can wait until there is something working to govern. See `docs/ADR/0006-licensing.md` and the related governance ADR (when written). The commercial open questions — pricing, go-to-market sequencing, and the corporate structure that codifies the network's data discipline (Aegilo never sells contributed data) — now live in `STRATEGY.md`.
+**Open.** Whether Limpide is eventually owned by a mission-locked company, a foundation, or a steward-ownership structure. The decision can wait until there is something working to govern; licensing (ADR-0006) is an open placeholder in the [ADR index](ADR/README.md). Commercial open questions — payer, price, and unit economics — live in `STRATEGY.md`. The contractual structure for any future network's data discipline (Aegilo never sells contributed data) is an open question in `ARCHITECTURE.md`.
